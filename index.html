@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Where Control Lives in an AI System</title>
+<meta name="description" content="A framework with five bands, two channels, and what escapes. A band-by-band account of where control sits in a deployed AI system, who can change it, and what governance instruments miss.">
+<style>
+:root{
+  --ink:#1A1B21;
+  --paper:#EEEEEB;
+  --paper-2:#E5E5E1;
+  --rule:#C9C7BF;
+  --gray:#6B6B73;
+  --content:#185FA5;
+  --action:#9E2A2A;
+  --violet:#534AB7;
+  --green:#0F6E56;
+  --display:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+  --body:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --measure:44rem;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:var(--body);font-size:17px;line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:60rem;margin:0 auto;padding:0 1.5rem}
+a{color:var(--content)}
+h1,h2,h3{font-family:var(--display);font-weight:600;line-height:1.15;letter-spacing:-.01em;margin:0}
+.eyebrow{
+  font-family:var(--mono);font-size:1rem;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--ink);margin:0 0 .8rem
+}
+
+/* ---------- hero ---------- */
+header{padding:5rem 0 2.5rem}
+h1{font-size:clamp(1.9rem,4.4vw,2.9rem)}
+.sub{font-size:clamp(1.05rem,2.4vw,1.3rem);color:var(--gray);margin:.7rem 0 0;font-family:var(--display);font-style:italic}
+.byline{font-family:var(--mono);font-size:.75rem;color:var(--gray);margin:1.4rem 0 0;letter-spacing:.02em}
+.claim{
+  margin:2rem 0 0;padding:1.3rem 0 0;border-top:1px solid var(--rule);
+  font-family:var(--display);font-size:clamp(1.05rem,2.2vw,1.35rem);line-height:1.45;max-width:44rem
+}
+.claim em{font-style:normal;box-shadow:inset 0 -.42em 0 rgba(24,95,165,.14)}
+.claim-2{border-top:0;padding-top:0;margin-top:1.1rem;font-size:clamp(1rem,2.1vw,1.15rem);color:var(--ink);max-width:46rem;line-height:1.5}
+
+/* ---------- the stack (signature) ---------- */
+.stack-sec{padding:2.2rem 0 1rem}
+.stack-lead{max-width:var(--measure);color:var(--gray);font-size:.95rem;margin:0 0 2rem}
+.stack{display:grid;grid-template-columns:auto 1fr auto;gap:0 1.1rem;align-items:stretch}
+.rail{width:3px;border-radius:2px;position:relative}
+.rail span{
+  position:absolute;top:50%;font-family:var(--mono);font-size:.78rem;letter-spacing:.13em;
+  text-transform:uppercase;white-space:nowrap;color:var(--gray)
+}
+.rail-c{background:var(--content)}
+.rail-c span{right:calc(100% + .6rem);transform:translateY(-50%) rotate(180deg);writing-mode:vertical-rl}
+.rail-a span{left:calc(100% + .6rem);transform:translateY(-50%);writing-mode:vertical-rl}
+/* the action rail is drawn as segments so it can stop short of the weights band */
+.rail-a{background:linear-gradient(var(--action) 0 0) no-repeat;background-size:100% 80%;background-position:top}
+.rail-a::after{
+  content:"";position:absolute;left:-2.5px;bottom:0;width:8px;height:20%;
+  border-left:3px dotted var(--rule)
+}
+.bands{display:flex;flex-direction:column;gap:.5rem}
+.band{
+  width:100%;text-align:left;background:#fff;border:1px solid var(--rule);border-left:4px solid var(--gray);
+  border-radius:2px;padding:.85rem 1.1rem;cursor:pointer;font:inherit;color:inherit;
+  display:flex;flex-wrap:wrap;align-items:baseline;gap:.1rem .9rem;
+  transition:transform .18s ease,box-shadow .18s ease,background .18s ease
+}
+.band:hover,.band:focus-visible{transform:translateX(3px);box-shadow:0 2px 0 rgba(0,0,0,.06)}
+.band[aria-expanded="true"]{background:var(--paper-2)}
+.band .name{font-family:var(--display);font-size:1.15rem;font-weight:600}
+.band .tag{font-size:.92rem;color:var(--gray);font-style:italic}
+.band .cue{margin-left:auto;font-family:var(--mono);font-size:.82rem;color:var(--gray)}
+.detail{
+  display:none;border:1px solid var(--rule);border-top:0;border-radius:0 0 2px 2px;
+  background:#fff;padding:.9rem 1.1rem 1.1rem;margin-top:-.5rem;
+}
+.detail.open{display:block}
+.detail dl{margin:0;display:grid;grid-template-columns:8.5rem 1fr;gap:.35rem .9rem;font-size:.9rem}
+.detail dt{font-family:var(--mono);font-size:.78rem;letter-spacing:.11em;text-transform:uppercase;color:var(--gray);padding-top:.25rem}
+.detail dd{margin:0}
+.detail .fail{color:var(--action)}
+
+/* ---------- motive ---------- */
+.motive{margin:2.4rem 0 0;padding:1.4rem 1.6rem;background:#fff;border:1px solid var(--rule);border-left:4px solid var(--action);border-radius:2px}
+.motive h3{font-size:1.15rem;margin-bottom:.6rem}
+.motive p{font-size:.95rem;margin:0 0 .7rem;max-width:44rem}
+.motive p:last-child{margin-bottom:0}
+
+/* ---------- questions ---------- */
+.q-sec{padding:4rem 0 1rem}
+.qs{list-style:none;margin:1.8rem 0 0;padding:0;counter-reset:q;
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:1px;background:var(--rule);border:1px solid var(--rule)}
+.qs li{background:var(--paper);padding:1.1rem 1.2rem;counter-increment:q}
+.qs li::before{content:counter(q,decimal-leading-zero);display:block;font-family:var(--mono);font-size:.78rem;color:var(--gray);letter-spacing:.12em;margin-bottom:.45rem}
+.qs b{font-family:var(--display);font-weight:600;font-size:1.02rem;display:block}
+.qs span{font-size:.95rem;color:var(--gray)}
+
+/* ---------- get it ---------- */
+.get{padding:2.6rem 0 1rem}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(16rem,1fr));gap:1rem;margin-top:1.8rem}
+.card{background:#fff;border:1px solid var(--rule);border-radius:2px;padding:1.3rem;display:flex;flex-direction:column}
+.card h3{font-size:1.15rem}
+.card p{font-size:.95rem;color:var(--gray);margin:.5rem 0 1.2rem;flex:1}
+.card a{
+  display:inline-block;font-family:var(--mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;
+  text-decoration:none;border-bottom:2px solid var(--content);padding-bottom:2px;align-self:flex-start
+}
+.card a.alt{
+  border-bottom:1px solid var(--rule);color:var(--gray);margin-top:.45rem;text-transform:none;letter-spacing:.04em
+}
+.card a:hover{border-bottom-color:var(--ink)}
+
+/* ---------- gaps ---------- */
+.gaps{padding:2.6rem 0 1rem}
+.gaps ol{margin:1.6rem 0 0;padding:0;list-style:none;max-width:46rem}
+.gaps li{border-top:1px solid var(--rule);padding:.85rem 0;display:grid;grid-template-columns:1.4rem 1fr;gap:.9rem}
+.gaps li:last-child{border-bottom:1px solid var(--rule)}
+.gaps .num{font-family:var(--mono);font-size:1rem;color:var(--action);padding-top:.15rem;line-height:1}
+.gaps b{font-family:var(--display);font-weight:600}
+.gaps span{display:block;font-size:.95rem;color:var(--gray)}
+
+footer{margin-top:5rem;border-top:1px solid var(--rule);padding:2rem 0 4rem;font-size:.92rem;color:var(--gray)}
+footer p{margin:.3rem 0}
+.note{font-family:var(--mono);font-size:.8rem;letter-spacing:.06em}
+
+@media (max-width:640px){
+  .stack{grid-template-columns:auto 1fr;gap:0 .8rem}
+  .rail-a{display:none}
+  .rail-c span,.rail-a span{display:none}
+  .detail dl{grid-template-columns:1fr;gap:.1rem .5rem}
+  .detail dt{padding-top:.6rem}
+  .band .cue{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+}
+.reveal{opacity:0;transform:translateY(6px);animation:rise .5s ease forwards}
+@keyframes rise{to{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+<header>
+  <p class="eyebrow">Technical &amp; policy paper</p>
+  <h1>Where Control Lives in an AI System</h1>
+  <p class="sub">A framework with five bands, two channels, and what escapes</p>
+  <p class="byline">David J. Carlson, with Claude as contributor &nbsp;&middot;&nbsp; 11 September 2026</p>
+  <p class="claim">A deployed AI system is not a model. It is five bands &mdash; weights, gateway, inference, wrapper, product &mdash; each with its own owner and its own way of failing, flanked by two channel boundaries (content and action) that bound what it can output and what it can do.</p>
+
+  <p class="claim claim-2"><b>What the bands are for.</b> None was built as a safety architecture. A checkpoint, the weights at a point in time, answers nothing on its own: no endpoint, no account of who is asking, no memory of the request, no tools, no knowledge of anything outside its training data. The gateway serves it at scale; the inference band turns a general model into one that does a particular job, with a prompt that frames the task, tools that let it act and retrieval that lets it use what an organization knows; the wrapper carries work across many steps instead of one turn; the product band makes it usable by a specialist, with connectors to real data sources and provenance on every result. Agents calling agents is what the assembled stack makes possible.</p>
+
+  <p class="claim claim-2"><b>And why failing, rather than doing.</b> Those same structures are what stands between the world and the information encoded in a checkpoint, which is enough to harm individuals, societies, or humankind. Containment is a second job asked of structures built for a first, which is why each band is described here by how it fails: so a failure can be caught in time to repair or mitigate it, and because a control that fails without announcing itself compensates for nothing. A control that must hold when the model is mistaken, absent or adversarial cannot be a disposition, and dispositions are all that can currently be trained into the checkpoint.</p>
+
+  <p class="claim claim-2"><b>Bound the control to what, though.</b> Not to zero, and not to one number. Very wide availability of conventional-explosive chemistry is tolerated everywhere; almost none is tolerated for the pathogen classes under nucleic-acid screening. Not different in kind &mdash; different in how many people one successful use of that information can reach and whether the harm stops on its own. And where the line goes is not a technical determination. A model may be trained on restricted data, or trained in ways that give it tendencies, but nothing in the model currently decides what it should be prevented from doing. Whoever is positioned to decide does, for reasons running from irreversible harm through law, liability and product tone to a government&rsquo;s decisions about what may be said. The former bounds misuse, the latter bounds what citizens may be told, and both configure the same five bands. That input this framework does not supply.</p>
+
+  <p class="claim claim-2"><b>Which brings the weights into focus.</b> Every control trained into the weights is a <em>disposition</em> rather than a constraint. <em>The weights band does not currently hold a constraint in the sense used here &mdash; something that binds when the model is mistaken, absent, or adversarial.</em> Which is why the useful questions are which of the other four bands the control lives in, who owns that band, and how it fails.</p>
+
+  </header>
+
+<section class="stack-sec">
+  <p class="eyebrow">The decomposition</p>
+  <p class="stack-lead">Drawn as the document draws it, with the weights at the bottom. The order never varies; the contents vary enormously, and bands may be absent. A band is a position in a system, not a rung on a scale. Select a band to see what it is, who owns it, how it is released, and how it fails.</p>
+
+  <div class="stack">
+    <div class="rail rail-c" aria-hidden="true"><span>Content channel &middot; what it says</span></div>
+    <div class="bands" id="bands"></div>
+    <div class="rail rail-a" aria-hidden="true"><span>Action channel &middot; what it does</span></div>
+  </div>
+
+  <p class="stack-lead" style="margin:1.8rem 0 .5rem;font-weight:600">The two channels</p>
+  <p class="stack-lead" style="margin-top:0">
+    The content channel has a control at every band. The action channel has none at the weights &mdash; the dotted segment on the right. Nothing that a model is trained to be constrains what it is able to <em>do</em>; refusal training makes a model reluctant to choose an action, and does nothing to its reach. The controls on that channel are called the affordance gate &mdash; tool definitions, hooks and permission rules, in that order; the operating-system sandbox that binds execution sits outside the stack and backstops the gate rather than belonging to it.
+  </p>
+
+  <div class="motive">
+    <h3>Why the gateway band matters more each year</h3>
+    <p>A growing share of capable models ships as weights alone. A published checkpoint arrives with no gateway band at all, not a weak one but none, and whoever downloads it owns every band above.</p>
+    <p>So for an open-weight deployment the only band that ships is the one whose controls are dispositions. Everything that still holds when the model is mistaken has to be assembled above it afterwards, by whoever assembles it &mdash; a different question from how the model was trained, and answerable only by naming the bands actually present.</p>
+    <p>The thinness cuts both ways, which is worth saying plainly. It is what makes a published checkpoint hard to contain. It is also what makes it hard to conscript: the same weakness that defeats a safety disposition defeats an imposed account of what may be said.</p>
+  </div>
+</section>
+
+<section class="q-sec">
+  <p class="eyebrow">The method</p>
+  <h2>Six questions that outlast the answers</h2>
+  <p class="stack-lead" style="margin-top:.8rem">Asked of any band, and of any control inside one. They can be asked of a system this framework has never heard of. Select any band above to see all six answered for it.</p>
+  <ul class="qs">
+    <li><b>Who owns it</b><span>Who answers for defects and decides what ships.</span></li>
+    <li><b>Who can change it</b><span>After deployment &mdash; and whether anyone is told.</span></li>
+    <li><b>Who can observe it</b><span>And from which of the three positions.</span></li>
+    <li><b>What it can reach</b><span>The action channel, and the affordance gate that bounds it.</span></li>
+    <li><b>How it fails</b><span>Loudly, or without anything marking the moment.</span></li>
+    <li><b>Whether it still binds at hour forty</b><span>Time-invariant, or decaying as the run lengthens.</span></li>
+  </ul>
+</section>
+
+<section class="get">
+  <p class="eyebrow">Read it</p>
+  <h2>Two ways in</h2>
+  <div class="cards">
+    
+    <div class="card">
+      <h3>The paper</h3>
+      <p>An introduction, fifteen sections and six appendices, including a terminology appendix that separates the senses of <i>routing</i>, <i>serving</i>, <i>harness</i>, <i>permission</i> and <i>policy</i>.</p>
+      <a href="where-control-lives.pdf">Download (PDF, 128 pages)</a>
+    </div>
+    <div class="card">
+      <h3>The deck</h3>
+      <p>The same argument as slides, with the diagrams at presentation size. </p>
+      <a href="where-control-lives-deck.pdf">Download (PDF, 51 slides)</a>
+      <a class="alt" href="where-control-lives-deck.pptx">or PPTX, to present or reuse</a>
+    </div>
+  </div>
+</section>
+
+<section class="gaps">
+  <p class="eyebrow">Limits</p>
+  <h2>What this framework cannot do</h2>
+  <p class="stack-lead" style="margin-top:.8rem">Stated because a decomposition is more useful when it names where it stops than when it appears to work everywhere.</p>
+  <ol>
+    <li><span class="num">&mdash;</span><div><b>No process dimension.</b><span>Nothing says when in a lifecycle a band is built, reviewed or certified &mdash; which is what a conformity regime needs to act on any of it.</span></div></li>
+    <li><span class="num">&mdash;</span><div><b>No capability gradation.</b><span>The framework cannot yet say that at some capability level a particular band becomes mandatory.</span></div></li>
+    <li><span class="num">&mdash;</span><div><b>Multi-agent structure, mostly not.</b><span>Two claims about a single edge. Branching, cycles, error amplification across hops and agents sampling one model are all outside it.</span></div></li>
+    <li><span class="num">&mdash;</span><div><b>No magnitude for duration.</b><span>The sixth question sorts controls into what holds and what decays, but supplies a direction and not a rate.</span></div></li>
+    <li><span class="num">&mdash;</span><div><b>No numbered tiers, deliberately.</b><span>Premature quantification is how the most successful levels framework in engineering acquired a tier that functions mainly as marketing.</span></div></li>
+  </ol>
+</section>
+
+</div>
+
+<script>
+const BANDS = [
+  { name:"Product", tag:"domain layer",
+    owner:"Product team, with customer configuration", revise:"Versioned; shipped when the product team chooses",
+    is:"The delivery surface and the domain policy on top of it: endpoints, session handling, quotas, connectors, and the credentials attached to them.",
+    observe:"The deployer and its customer.",
+    reach:"Credential scope \u2014 not a stage of the affordance gate but a bound on every stage at once.",
+    holds:"Credential scope holds. Step-wise review does not: nobody meaningfully reviews step four hundred.",
+    fail:"As availability and abuse-rate problems. Credential scope fails silently and worst: an over-broad token turns every other control into a formality." },
+  { name:"Wrapper", tag:"independent, replaceable",
+    owner:"Deployer or platform", revise:"Versioned, forkable, and often invisible to the user",
+    is:"External systems sitting around the model rather than inside it: guardrails, hooks, permission rules. Its defining virtue is independence \u2014 separate weights, separate failure modes, so a jailbreak that defeats the model does not automatically pass the filter. Unlike the gateway band, the party running it can replace or remove it at will.",
+    observe:"The deployer.",
+    reach:"Hooks and permission rules \u2014 the second and third stages of the affordance gate.",
+    holds:"Mixed. Hooks are deterministic code and run identically on the ten-thousandth call; the ask outcome decays, because it resolves to a person whose attention is the scarce resource.",
+    fail:"Visibly, in both directions. False positives become user-facing friction; false negatives pass straight through." },
+  { name:"Inference", tag:"legible, live",
+    owner:"Deployer", revise:"Continuously \u2014 arguably not a release at all",
+    is:"What changes per session: the system prompt, the tool definitions, retrieval, and what ends up in the context window. The most legible band, and the one most often assumed away.",
+    observe:"The deployer. The artifact is readable text, which makes this the most auditable band and also the most exposed.",
+    reach:"Tool definitions \u2014 the first stage of the affordance gate: what exists to be called at all. Nothing outside the declared set is reachable.",
+    holds:"No. The system prompt recedes under depth, and material still inside the context window stops influencing the next decision.",
+    fail:"By being talked around, by receding under depth, and by where it lands in the payload the harness assembles." },
+  { name:"Gateway", tag:"developer-side, invisible",
+    owner:"Model developer. Absent entirely from an open-weight release.", revise:"Unannounced, unversioned, and it reaches everyone",
+    is:"The developer-owned stratum between the request and the weights: classifiers, model routing and substitution, account enforcement. Invisible to the deployer and non-swappable.",
+    observe:"The model developer only, and only where the band exists at all.",
+    reach:"The content channel. On the action channel, rate limits and account enforcement bound repetition rather than reach.",
+    holds:"Yes. Every request is screened alike, at minute one and at hour forty.",
+    fail:"Silently, and it is the only band its owner can revise after deployment without notice. No release event exists for a rule to attach to." },
+  { name:"Weights", tag:"permanent, irreversible",
+    owner:"Model developer", revise:"Announced, dated \u2014 and once published, never",
+    is:"A checkpoint: a specific set of parameter values. Architecture, pretraining data, base model and post-training alignment are stages of its production, not components running at request time.",
+    observe:"The model developer only, by instrumentation \u2014 and reading a feature is not gating on it.",
+    reach:"Refusal dispositions, and they bound the content channel only. Nothing here bounds what the system can do.",
+    holds:"It is never binding. A disposition is not a constraint, at hour one or at hour forty.",
+    fail:"By Goodhart, and by fine-tuning. Every control here is a disposition rather than a constraint \u2014 the capability remains intact beneath the trained reluctance." }
+];
+
+const host = document.getElementById('bands');
+BANDS.forEach((b, i) => {
+  const btn = document.createElement('button');
+  btn.className = 'band reveal';
+  btn.style.animationDelay = (i * 70) + 'ms';
+  btn.setAttribute('aria-expanded','false');
+  btn.innerHTML =
+    '<span class="name">'+b.name+'</span>'+
+    '<span class="tag">'+b.tag+'</span>'+
+    '<span class="cue">the six questions &rarr;</span>';
+
+  const det = document.createElement('div');
+  det.className = 'detail';
+  det.innerHTML =
+    '<dl>'+
+    '<dt>What it is</dt><dd>'+b.is+'</dd>'+
+    '<dt>Owner</dt><dd>'+b.owner+'</dd>'+
+    '<dt>Release</dt><dd>'+b.revise+'</dd>'+
+    '<dt>Observable by</dt><dd>'+b.observe+'</dd>'+
+    '<dt>Reach</dt><dd>'+b.reach+'</dd>'+
+    '<dt>Fails</dt><dd class="fail">'+b.fail+'</dd>'+
+    '<dt>At hour forty</dt><dd>'+b.holds+'</dd>'+
+    '</dl>';
+
+  btn.addEventListener('click', () => {
+    const open = det.classList.toggle('open');
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+
+  host.appendChild(btn);
+  host.appendChild(det);
+});
+</script>
+</body>
+</html>

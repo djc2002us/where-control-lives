@@ -223,6 +223,18 @@ footer p{margin:.3rem 0}
   </div>
 </section>
 
+<section class="get">
+<p class="eyebrow">Companion paper</p>
+<h2>Agent Instantiation and Control Placement</h2>
+<div class="cards">
+<div class="card">
+<h3>A detailed look at AI agents and how to evaluate their controls</h3>
+<p>Why configuring a control is not enforcing it; how an agent is instantiated; the mechanisms by which agent controls fail, and the empirical record of those failures; why placement decides whether a control holds; the safeguards required and where they must live; and thirty-eight inspection questions for embedded third-party evaluators. Eleven sections and a glossary of the framework&rsquo;s terms as the paper uses them.</p>
+<a href="agent-instantiation-and-control-placement.pdf">Download (PDF, 57 pages)</a>
+</div>
+</div>
+</section>
+
 <section class="gaps">
   <p class="eyebrow">Limits</p>
   <h2>What this framework cannot do</h2>
@@ -230,7 +242,7 @@ footer p{margin:.3rem 0}
   <ol>
     <li><span class="num">&mdash;</span><div><b>No process dimension.</b><span>Nothing says when in a lifecycle a band is built, reviewed or certified &mdash; which is what a conformity regime needs to act on any of it.</span></div></li>
     <li><span class="num">&mdash;</span><div><b>No capability gradation.</b><span>The framework cannot yet say that at some capability level a particular band becomes mandatory.</span></div></li>
-    <li><span class="num">&mdash;</span><div><b>Multi-agent structure, mostly not.</b><span>Two claims about a single edge. Branching, cycles, error amplification across hops and agents sampling one model are all outside it.</span></div></li>
+    <li><span class="num">&mdash;</span><div><b>Multi-agent structure, mostly not.</b><span>Two claims about a single edge. Branching, cycles, error amplification across hops and agents sampling one model are all outside it. <a href="agent-instantiation-and-control-placement.pdf">A companion paper</a> extends the framework to spawning and to agents that reach one another, and marks each place it goes beyond what the framework establishes.</span></div></li>
     <li><span class="num">&mdash;</span><div><b>No magnitude for duration.</b><span>The sixth question sorts controls into what holds and what decays, but supplies a direction and not a rate.</span></div></li>
     <li><span class="num">&mdash;</span><div><b>No numbered tiers, deliberately.</b><span>Premature quantification is how the most successful levels framework in engineering acquired a tier that functions mainly as marketing.</span></div></li>
   </ol>
@@ -242,18 +254,18 @@ footer p{margin:.3rem 0}
 const BANDS = [
   { name:"Product", tag:"domain layer",
     owner:"Product team, with customer configuration", revise:"Versioned; shipped when the product team chooses",
-    is:"The delivery surface and the domain policy on top of it: endpoints, session handling, quotas, connectors, and the credentials attached to them.",
+    is:"The domain layer the stack makes possible: a shared workspace that holds state across a long task, like a research workbench or case file; orchestration and compute for long-running, multi-step execution; scoped connectors to specialist data sources, with domain procedure encoded as skills; and auditable artifacts, traceable and reviewable, with provenance attached to every result.",
     observe:"The deployer and its customer.",
     reach:"Credential scope \u2014 not a stage of the affordance gate but a bound on every stage at once.",
     holds:"Credential scope holds. Step-wise review does not: nobody meaningfully reviews step four hundred.",
-    fail:"As availability and abuse-rate problems. Credential scope fails silently and worst: an over-broad token turns every other control into a formality." },
+    fail:"Silently, through scope and duration. A connector or token scoped more widely than the task turns every other control into a formality, and on a run long enough, nobody reviews step four hundred." },
   { name:"Wrapper", tag:"independent, replaceable",
     owner:"Deployer or platform", revise:"Versioned, forkable, and often invisible to the user",
-    is:"External systems sitting around the model rather than inside it: guardrails, hooks, permission rules. Its defining virtue is independence \u2014 separate weights, separate failure modes, so a jailbreak that defeats the model does not automatically pass the filter. Unlike the gateway band, the party running it can replace or remove it at will.",
+    is:"External systems sitting around the model rather than inside it: deployer guardrails such as filters, policy routing, hooks and permission rules, and the application surface, meaning endpoints, session handling, authentication and quotas, which shapes who reaches the model, through what interface and at what volume. Its defining virtue is independence, separate weights and separate failure modes, so a jailbreak that defeats the model does not automatically pass the filter. Unlike the gateway band, the party running it can replace or remove it at will.",
     observe:"The deployer.",
     reach:"Hooks and permission rules \u2014 the second and third stages of the affordance gate.",
     holds:"Mixed. Hooks are deterministic code and run identically on the ten-thousandth call; the ask outcome decays, because it resolves to a person whose attention is the scarce resource.",
-    fail:"Visibly, in both directions. False positives become user-facing friction; false negatives pass straight through." },
+    fail:"Visibly, in both directions. False positives become user-facing friction; false negatives pass straight through, and at the application surface, failures show up as availability and abuse-rate problems." },
   { name:"Inference", tag:"legible, live",
     owner:"Deployer", revise:"Continuously \u2014 arguably not a release at all",
     is:"What changes per session: the system prompt, the tool definitions, retrieval, and what ends up in the context window. The most legible band, and the one most often assumed away.",

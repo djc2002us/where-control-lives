@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Where Control Lives in an AI System</title>
-<meta name="description" content="A framework with five bands, two channels, and what escapes. A band-by-band account of where control sits in a deployed AI system, who can change it, and what governance instruments miss.">
+<meta name="description" content="A framework with six bands, two channels, and what escapes. A band-by-band account of where control sits in a deployed AI system, who can change it, and what governance instruments miss.">
 <style>
 :root{
   --ink:#1A1B21;
@@ -35,9 +35,10 @@ h1,h2,h3{font-family:var(--display);font-weight:600;line-height:1.15;letter-spac
   font-family:var(--mono);font-size:1rem;letter-spacing:.12em;text-transform:uppercase;
   color:var(--ink);margin:0 0 .8rem
 }
+section > .eyebrow{font-size:1.35rem;font-weight:700;letter-spacing:.08em;margin:0 0 .6rem}
 
 /* ---------- hero ---------- */
-header{padding:5rem 0 2.5rem}
+header{padding:5rem 0 1.2rem}
 h1{font-size:clamp(1.9rem,4.4vw,2.9rem)}
 .sub{font-size:clamp(1.05rem,2.4vw,1.3rem);color:var(--gray);margin:.7rem 0 0;font-family:var(--display);font-style:italic}
 .byline{font-family:var(--mono);font-size:.75rem;color:var(--gray);margin:1.4rem 0 0;letter-spacing:.02em}
@@ -49,21 +50,21 @@ h1{font-size:clamp(1.9rem,4.4vw,2.9rem)}
 .claim-2{border-top:0;padding-top:0;margin-top:1.1rem;font-size:clamp(1rem,2.1vw,1.15rem);color:var(--ink);max-width:46rem;line-height:1.5}
 
 /* ---------- the stack (signature) ---------- */
-.stack-sec{padding:2.2rem 0 1rem}
+.stack-sec{padding:1rem 0 1rem}
 .stack-lead{max-width:var(--measure);color:var(--gray);font-size:.95rem;margin:0 0 2rem}
-.stack{display:grid;grid-template-columns:auto 1fr auto;gap:0 1.1rem;align-items:stretch}
+.stack{display:grid;grid-template-columns:auto 1fr auto;gap:0 1.1rem;align-items:stretch;padding:0 1.6rem}
 .rail{width:3px;border-radius:2px;position:relative}
 .rail span{
-  position:absolute;top:50%;font-family:var(--mono);font-size:.78rem;letter-spacing:.13em;
-  text-transform:uppercase;white-space:nowrap;color:var(--gray)
+  position:absolute;top:50%;font-family:var(--mono);font-size:.85rem;font-weight:600;letter-spacing:.13em;
+  text-transform:uppercase;white-space:nowrap;color:var(--ink)
 }
 .rail-c{background:var(--content)}
-.rail-c span{right:calc(100% + .6rem);transform:translateY(-50%) rotate(180deg);writing-mode:vertical-rl}
-.rail-a span{left:calc(100% + .6rem);transform:translateY(-50%);writing-mode:vertical-rl}
-/* the action rail is drawn as segments so it can stop short of the weights band */
-.rail-a{background:linear-gradient(var(--action) 0 0) no-repeat;background-size:100% 80%;background-position:top}
+.rail-c span{right:calc(100% + 1.3rem);transform:translateY(-50%) rotate(180deg);writing-mode:vertical-rl}
+.rail-a span{left:calc(100% + 1.3rem);transform:translateY(-50%);writing-mode:vertical-rl}
+/* the action rail is drawn as segments so it can stop short of the serving and weights bands */
+.rail-a{background:linear-gradient(var(--action) 0 0) no-repeat;background-size:100% 66.7%;background-position:top}
 .rail-a::after{
-  content:"";position:absolute;left:-2.5px;bottom:0;width:8px;height:20%;
+  content:"";position:absolute;left:-2.5px;bottom:0;width:8px;height:33.3%;
   border-left:3px dotted var(--rule)
 }
 .bands{display:flex;flex-direction:column;gap:.5rem}
@@ -95,7 +96,7 @@ h1{font-size:clamp(1.9rem,4.4vw,2.9rem)}
 .motive p:last-child{margin-bottom:0}
 
 /* ---------- questions ---------- */
-.q-sec{padding:4rem 0 1rem}
+.q-sec{padding:1.4rem 0 1rem}
 .qs{list-style:none;margin:1.8rem 0 0;padding:0;counter-reset:q;
   display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:1px;background:var(--rule);border:1px solid var(--rule)}
 .qs li{background:var(--paper);padding:1.1rem 1.2rem;counter-increment:q}
@@ -104,7 +105,7 @@ h1{font-size:clamp(1.9rem,4.4vw,2.9rem)}
 .qs span{font-size:.95rem;color:var(--gray)}
 
 /* ---------- get it ---------- */
-.get{padding:2.6rem 0 1rem}
+.get{padding:1.4rem 0 1rem}
 .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(16rem,1fr));gap:1rem;margin-top:1.8rem}
 .card{background:#fff;border:1px solid var(--rule);border-radius:2px;padding:1.3rem;display:flex;flex-direction:column}
 .card h3{font-size:1.15rem}
@@ -119,7 +120,7 @@ h1{font-size:clamp(1.9rem,4.4vw,2.9rem)}
 .card a:hover{border-bottom-color:var(--ink)}
 
 /* ---------- gaps ---------- */
-.gaps{padding:2.6rem 0 1rem}
+.gaps{padding:1.4rem 0 1rem}
 .gaps ol{margin:1.6rem 0 0;padding:0;list-style:none;max-width:46rem}
 .gaps li{border-top:1px solid var(--rule);padding:.85rem 0;display:grid;grid-template-columns:1.4rem 1fr;gap:.9rem}
 .gaps li:last-child{border-bottom:1px solid var(--rule)}
@@ -132,7 +133,8 @@ footer p{margin:.3rem 0}
 .note{font-family:var(--mono);font-size:.8rem;letter-spacing:.06em}
 
 @media (max-width:640px){
-  .stack{grid-template-columns:auto 1fr;gap:0 .8rem}
+  .stack{grid-template-columns:auto 1fr;gap:0 .8rem;padding:0}
+  section > .eyebrow{font-size:1.15rem}
   .rail-a{display:none}
   .rail-c span,.rail-a span{display:none}
   .detail dl{grid-template-columns:1fr;gap:.1rem .5rem}
@@ -153,17 +155,17 @@ footer p{margin:.3rem 0}
 <header>
   <p class="eyebrow">Technical &amp; policy paper</p>
   <h1>Where Control Lives in an AI System</h1>
-  <p class="sub">A framework with five bands, two channels, and what escapes</p>
-  <p class="byline">David J. Carlson, with Claude as contributor &nbsp;&middot;&nbsp; 11 September 2026</p>
-  <p class="claim">A deployed AI system is not a model. It is five bands &mdash; weights, gateway, inference, wrapper, product &mdash; each with its own owner and its own way of failing, flanked by two channel boundaries (content and action) that bound what it can output and what it can do.</p>
+  <p class="sub">A framework with six bands, two channels, and what escapes</p>
+  <p class="byline">David J. Carlson, with Claude as contributor &nbsp;&middot;&nbsp; Version 2 &nbsp;&middot;&nbsp; 16 October 2026</p>
+  <p class="claim">A deployed AI system is not a model. It is six bands &mdash; weights, serving, gateway, inference, wrapper, product &mdash; each with its own owner and its own way of failing, flanked by two channel boundaries (content and action) that bound what it can output and what it can do.</p>
 
-  <p class="claim claim-2"><b>What the bands are for.</b> None was built as a safety architecture. A checkpoint, the weights at a point in time, answers nothing on its own: no endpoint, no account of who is asking, no memory of the request, no tools, no knowledge of anything outside its training data. The gateway serves it at scale; the inference band turns a general model into one that does a particular job, with a prompt that frames the task, tools that let it act and retrieval that lets it use what an organization knows; the wrapper carries work across many steps instead of one turn; the product band makes it usable by a specialist, with connectors to real data sources and provenance on every result. Agents calling agents is what the assembled stack makes possible.</p>
+  <p class="claim claim-2"><b>What the bands are for.</b> None was built as a safety architecture. A checkpoint, the weights at a point in time, answers nothing on its own: no endpoint, no account of who is asking, no memory of the request, no tools, no knowledge of anything outside its training data. The serving band makes it compute; the gateway serves it at scale; the inference band turns a general model into one that does a particular job, with a prompt that frames the task, tools that let it act and retrieval that lets it use what an organization knows; the wrapper carries work across many steps instead of one turn; the product band makes it usable by a specialist, with connectors to real data sources and provenance on every result. Agents calling agents is what the assembled stack makes possible.</p>
 
   <p class="claim claim-2"><b>And why failing, rather than doing.</b> Those same structures are what stands between the world and the information encoded in a checkpoint, which is enough to harm individuals, societies, or humankind. Containment is a second job asked of structures built for a first, which is why each band is described here by how it fails: so a failure can be caught in time to repair or mitigate it, and because a control that fails without announcing itself compensates for nothing. A control that must hold when the model is mistaken, absent or adversarial cannot be a disposition, and dispositions are all that can currently be trained into the checkpoint.</p>
 
-  <p class="claim claim-2"><b>Bound the control to what, though.</b> Not to zero, and not to one number. Very wide availability of conventional-explosive chemistry is tolerated everywhere; almost none is tolerated for the pathogen classes under nucleic-acid screening. Not different in kind &mdash; different in how many people one successful use of that information can reach and whether the harm stops on its own. And where the line goes is not a technical determination. A model may be trained on restricted data, or trained in ways that give it tendencies, but nothing in the model currently decides what it should be prevented from doing. Whoever is positioned to decide does, for reasons running from irreversible harm through law, liability and product tone to a government&rsquo;s decisions about what may be said. The former bounds misuse, the latter bounds what citizens may be told, and both configure the same five bands. That input this framework does not supply.</p>
+  <p class="claim claim-2"><b>Bound the control to what, though.</b> Not to zero, and not to one number. Very wide availability of conventional-explosive chemistry is tolerated everywhere; almost none is tolerated for the pathogen classes under nucleic-acid screening. Not different in kind &mdash; different in how many people one successful use of that information can reach and whether the harm stops on its own. And where the line goes is not a technical determination. A model may be trained on restricted data, or trained in ways that give it tendencies, but nothing in the model currently decides what it should be prevented from doing. Whoever is positioned to decide does, for reasons running from irreversible harm through law, liability and product tone to a government&rsquo;s decisions about what may be said. The former bounds misuse, the latter bounds what citizens may be told, and both configure the same six bands. That input this framework does not supply.</p>
 
-  <p class="claim claim-2"><b>Which brings the weights into focus.</b> Every control trained into the weights is a <em>disposition</em> rather than a constraint. <em>The weights band does not currently hold a constraint in the sense used here &mdash; something that binds when the model is mistaken, absent, or adversarial.</em> Which is why the useful questions are which of the other four bands the control lives in, who owns that band, and how it fails.</p>
+  <p class="claim claim-2"><b>Which brings the weights into focus.</b> Every control trained into the weights is a <em>disposition</em> rather than a constraint. <em>The weights band does not currently hold a constraint in the sense used here &mdash; something that binds when the model is mistaken, absent, or adversarial.</em> Which is why the useful questions are which of the other five bands the control lives in, who owns that band, and how it fails.</p>
 
   </header>
 
@@ -176,16 +178,17 @@ footer p{margin:.3rem 0}
     <div class="bands" id="bands"></div>
     <div class="rail rail-a" aria-hidden="true"><span>Action channel &middot; what it does</span></div>
   </div>
+  <p class="stack-lead" style="margin:.7rem 0 0;font-size:.85rem;max-width:none">Owners shown are for served access. Under open weights the gateway is absent and the recipient owns the rest.</p>
 
-  <p class="stack-lead" style="margin:1.8rem 0 .5rem;font-weight:600">The two channels</p>
+  <p class="eyebrow" style="margin:1.8rem 0 .5rem">The two channels</p>
   <p class="stack-lead" style="margin-top:0">
-    The content channel has a control at every band. The action channel has none at the weights &mdash; the dotted segment on the right. Nothing that a model is trained to be constrains what it is able to <em>do</em>; refusal training makes a model reluctant to choose an action, and does nothing to its reach. The controls on that channel are called the affordance gate &mdash; tool definitions, hooks and permission rules, in that order; the operating-system sandbox that binds execution sits outside the stack and backstops the gate rather than belonging to it.
+    The content channel can have a control at every band. The action channel has none at the weights or the serving band &mdash; the dotted segment on the right. Nothing that a model is trained to be constrains what it is able to <em>do</em>; refusal training makes a model reluctant to choose an action, and does nothing to its reach. An activation monitor in the serving band differs in kind but not in channel: it does not depend on the model&rsquo;s choice, and what it flags can stop a response, including one that carries a tool call, but it does not change what any response could reach. The controls on that channel are called the affordance gate &mdash; tool definitions, hooks and permission rules, in that order; the operating-system sandbox that binds execution sits outside the stack and backstops the gate rather than belonging to it.
   </p>
 
   <div class="motive">
     <h3>Why the gateway band matters more each year</h3>
     <p>A growing share of capable models ships as weights alone. A published checkpoint arrives with no gateway band at all, not a weak one but none, and whoever downloads it owns every band above.</p>
-    <p>So for an open-weight deployment the only band that ships is the one whose controls are dispositions. Everything that still holds when the model is mistaken has to be assembled above it afterwards, by whoever assembles it &mdash; a different question from how the model was trained, and answerable only by naming the bands actually present.</p>
+    <p>So for an open-weight deployment the only band that ships is the one whose controls are dispositions. Everything that still holds when the model is mistaken has to be assembled above it afterward, by whoever assembles it &mdash; a different question from how the model was trained, and answerable only by naming the bands actually present.</p>
     <p>The thinness cuts both ways, which is worth saying plainly. It is what makes a published checkpoint hard to contain. It is also what makes it hard to conscript: the same weakness that defeats a safety disposition defeats an imposed account of what may be said.</p>
   </div>
 </section>
@@ -212,18 +215,33 @@ footer p{margin:.3rem 0}
     <div class="card">
       <h3>The paper</h3>
       <p>An introduction, fifteen sections and six appendices, including a terminology appendix that separates the senses of <i>routing</i>, <i>serving</i>, <i>harness</i>, <i>permission</i> and <i>policy</i>.</p>
-      <a href="where-control-lives.pdf">Download (PDF, 128 pages)</a>
+      <a href="where-control-lives.pdf">Download (PDF, 137 pages)</a>
+      <a class="alt" href="where-control-lives-v1.pdf">or Version 1 (11 September 2026, five bands)</a>
     </div>
     <div class="card">
       <h3>The deck</h3>
       <p>The same argument as slides, with the diagrams at presentation size. </p>
-      <a href="where-control-lives-deck.pdf">Download (PDF, 51 slides)</a>
+      <a href="where-control-lives-deck.pdf">Download (PDF, 52 slides)</a>
       <a class="alt" href="where-control-lives-deck.pptx">or PPTX, to present or reuse</a>
     </div>
   </div>
 </section>
 
-<section class="get">
+<section class="gaps">
+  <p class="eyebrow">Version 2 &middot; 16 October 2026</p>
+  <h2>What changed in Version 2</h2>
+  <p class="stack-lead" style="margin-top:.8rem;color:var(--ink)">Version 2 adds a sixth band. The first edition, dated 11 September 2026, described five: weights, gateway, inference, wrapper and product. It placed the software that serves a checkpoint outside all of them, on the ground that it held no controls of its own. That no longer holds. Operators now place controls there on their own authority: activation monitors that read a running model&rsquo;s internal state, sampling changes such as watermarking, and cached computation the caller does not control. Version 2 sets these in a serving band, owned by the operator, between the weights and the gateway. The central claim is unchanged: a control that must hold when the model is mistaken, absent or adversarial cannot be a disposition.</p>
+  <p class="stack-lead" style="margin:0;color:var(--ink)">Four other changes run through the document:</p>
+  <ol>
+    <li><span class="num">&mdash;</span><div><b>Change notice.</b><span>The first edition said gateway changes reach deployments without anyone being told. Version 2 says notice of gateway and serving changes is at the owner&rsquo;s discretion. Some developers and operators announce changes, and nothing requires them to.</span></div></li>
+    <li><span class="num">&mdash;</span><div><b>Content-channel layers.</b><span>The content channel still has five layers in every served deployment. Version 2 adds a sixth, an activation monitor in the serving band, which is present only where an operator runs one, and so is not counted among the five.</span></div></li>
+    <li><span class="num">&mdash;</span><div><b>Subsection numbers.</b><span>Subsections are now numbered (4.2, C.1) so passages can be cited precisely. Please cite this edition as Version 2.</span></div></li>
+    <li><span class="num">&mdash;</span><div><b>New material.</b><span>A model that sets up and runs copies of itself, as the extreme case for the serving band; why a model&rsquo;s knowledge needs more containing than the same knowledge in a person; the framework&rsquo;s adversaries in one list; and several new definitions and comparisons with current practice.</span></div></li>
+  </ol>
+  <p class="stack-lead" style="margin:1rem 0 0">The first edition remains available <a href="where-control-lives-v1.pdf">here</a>.</p>
+</section>
+
+<section class="get" style="padding-top:.2rem">
 <p class="eyebrow">Companion paper</p>
 <h2>Agent Instantiation and Control Placement</h2>
 <div class="cards">
@@ -257,7 +275,7 @@ const BANDS = [
     is:"The domain layer the stack makes possible: a shared workspace that holds state across a long task, like a research workbench or case file; orchestration and compute for long-running, multi-step execution; scoped connectors to specialist data sources, with domain procedure encoded as skills; and auditable artifacts, traceable and reviewable, with provenance attached to every result.",
     observe:"The deployer and its customer.",
     reach:"Credential scope \u2014 not a stage of the affordance gate but a bound on every stage at once.",
-    holds:"Credential scope holds. Step-wise review does not: nobody meaningfully reviews step four hundred.",
+    holds:"Credential scope holds. Stepwise review does not: nobody meaningfully reviews step four hundred.",
     fail:"Silently, through scope and duration. A connector or token scoped more widely than the task turns every other control into a formality, and on a run long enough, nobody reviews step four hundred." },
   { name:"Wrapper", tag:"independent, replaceable",
     owner:"Deployer or platform", revise:"Versioned, forkable, and often invisible to the user",
@@ -274,12 +292,19 @@ const BANDS = [
     holds:"No. The system prompt recedes under depth, and material still inside the context window stops influencing the next decision.",
     fail:"By being talked around, by receding under depth, and by where it lands in the payload the harness assembles." },
   { name:"Gateway", tag:"developer-side, invisible",
-    owner:"Model developer. Absent entirely from an open-weight release.", revise:"Unannounced, unversioned, and it reaches everyone",
+    owner:"Model developer. Absent entirely from an open-weight release.", revise:"Often unannounced, unversioned, and it reaches everyone",
     is:"The developer-owned stratum between the request and the weights: classifiers, model routing and substitution, account enforcement. Invisible to the deployer and non-swappable.",
     observe:"The model developer only, and only where the band exists at all.",
     reach:"The content channel. On the action channel, rate limits and account enforcement bound repetition rather than reach.",
     holds:"Yes. Every request is screened alike, at minute one and at hour forty.",
-    fail:"Silently, and it is the only band its owner can revise after deployment without notice. No release event exists for a rule to attach to." },
+    fail:"Silently, and it is one of two bands its owner can revise after deployment without notice; the serving band is the other. There may be no release event for a rule to attach to." },
+  { name:"Serving", tag:"operator-side, often unannounced",
+    owner:"The operator: the developer when served, the recipient under open weights, the platform where one is interposed.", revise:"A new serving version or configuration, announced only at the operator\u2019s discretion",
+    is:"What makes a checkpoint compute: the code and numerics that run its layers, the sampling that turns a ranking into a token, monitors that read the running model\u2019s activations, and computation cached between requests. The serving stack is its substance, as the harness is the wrapper\u2019s. Its controls act per token, on a loop the gateway never sees.",
+    observe:"The operator only.",
+    reach:"The content channel only: which tokens can be produced, and what the activations show.",
+    holds:"Yes, for what is computed per token. Cached state persists, and ages under an eviction policy the caller does not set.",
+    fail:"Silently, as changed behavior with no change of checkpoint or prompt. A probe trained on one checkpoint goes stale when another is substituted." },
   { name:"Weights", tag:"permanent, irreversible",
     owner:"Model developer", revise:"Announced, dated \u2014 and once published, never",
     is:"A checkpoint: a specific set of parameter values. Architecture, pretraining data, base model and post-training alignment are stages of its production, not components running at request time.",
